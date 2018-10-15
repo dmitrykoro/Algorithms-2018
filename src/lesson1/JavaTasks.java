@@ -149,7 +149,29 @@ public class JavaTasks {
      * 121.3
      */
     static public void sortTemperatures(String inputName, String outputName) {
-        throw new NotImplementedError();
+        try {
+            File input = new File(inputName);
+            List<String> tempsRaw = Files.readAllLines(input.toPath());
+            ArrayList<Integer> tempsTreated = new ArrayList<>();
+
+            for (String currentLine: tempsRaw) {
+                tempsTreated.add(Integer.parseInt(currentLine.replace(".", "")));
+            }
+
+            int[] arrayTemps = tempsTreated.stream().mapToInt(i -> i).toArray();
+            Sorts.quickSort(arrayTemps);
+
+            BufferedWriter wr = new BufferedWriter(new FileWriter(outputName));
+
+            for (int i = 0; i < arrayTemps.length; i++) {
+                wr.write(String.valueOf((double) arrayTemps[i] / 10));
+                wr.newLine();
+            }
+            wr.close();
+
+        } catch (Throwable e) {
+            throw new IllegalArgumentException();
+        }
     }
 
     /**
