@@ -2,6 +2,11 @@ package lesson1;
 
 import kotlin.NotImplementedError;
 
+import java.io.*;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
+
 @SuppressWarnings("unused")
 public class JavaTasks {
     /**
@@ -33,7 +38,54 @@ public class JavaTasks {
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
     static public void sortTimes(String inputName, String outputName) {
-        throw new NotImplementedError();
+
+        try {
+            File input = new File(inputName);
+            List<String> timesRaw = Files.readAllLines(input.toPath());
+
+            ArrayList<Integer> timesTreated = new ArrayList<>();
+
+            for (String currentLine: timesRaw) {
+                timesTreated.add(Integer.parseInt(currentLine.replace(":", "")));
+            }
+
+            int[] arrayTimes = timesTreated.stream().mapToInt(i -> i).toArray();
+
+            Sorts.insertionSort(arrayTimes);
+            BufferedWriter wr = new BufferedWriter(new FileWriter(outputName));
+
+            for (int i = 0; i < arrayTimes.length; i++) {
+                if (String.valueOf(arrayTimes[i]).length() == 1) {
+                    wr.write("00:00:0" + arrayTimes[i]);
+                    wr.newLine();
+                } else if (String.valueOf(arrayTimes[i]).length() == 2) {
+                    wr.write("00:00:" + arrayTimes[i]);
+                    wr.newLine();
+                } else if (String.valueOf(arrayTimes[i]).length() == 3) {
+                    wr.write("00:0" + String.valueOf(arrayTimes[i]).charAt(0) + ":" + String.valueOf(arrayTimes[i]).charAt(1)
+                            + String.valueOf(arrayTimes[i]).charAt(2));
+                    wr.newLine();
+                } else if (String.valueOf(arrayTimes[i]).length() == 4) {
+                    wr.write("00:" + String.valueOf(arrayTimes[i]).charAt(0) + String.valueOf(arrayTimes[i]).charAt(1) + ":"
+                            + String.valueOf(arrayTimes[i]).charAt(2) + String.valueOf(arrayTimes[i]).charAt(3));
+                    wr.newLine();
+                } else if (String.valueOf(arrayTimes[i]).length() == 5) {
+                    wr.write("0" + String.valueOf(arrayTimes[i]).charAt(0) + ":" + String.valueOf(arrayTimes[i]).charAt(1)
+                            + String.valueOf(arrayTimes[i]).charAt(2) + ":" + String.valueOf(arrayTimes[i]).charAt(3)
+                            + String.valueOf(arrayTimes[i]).charAt(4));
+                    wr.newLine();
+                } else if (String.valueOf(arrayTimes[i]).length() == 6) {
+                    wr.write(String.valueOf(arrayTimes[i]).substring(0, 2) + ":"
+                            + String.valueOf(arrayTimes[i]).substring(2, 4) + ":"
+                            + String.valueOf(arrayTimes[i]).substring(4));
+                    wr.newLine();
+                }
+            }
+            wr.close();
+
+        } catch (IOException | NumberFormatException e) {
+            throw new IllegalArgumentException();
+        }
     }
 
     /**
