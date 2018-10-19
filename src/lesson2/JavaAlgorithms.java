@@ -43,7 +43,12 @@ public class JavaAlgorithms {
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
     static public Pair<Integer, Integer> optimizeBuyAndSell(String inputName) {
-        Pair pair;
+
+        int currentDifference = 0;
+        int maxDifference = 0;
+        int buyNumber = -1;
+        int sellNumber = -1;
+
         try {
             File input = new File(inputName);
             List<String> pricesRaw = Files.readAllLines(input.toPath());
@@ -54,47 +59,23 @@ public class JavaAlgorithms {
                 pricesTreated.add(Integer.parseInt(currentLine));
             }
 
-            Map<Integer, Integer> prices = new HashMap<Integer, Integer>();
             for (int i = 0; i < pricesTreated.size(); i++) {
-                prices.put(i + 1, pricesTreated.get(i));
-            }
+                for (int j = i; j < pricesTreated.size(); j++) {
+                    currentDifference = pricesTreated.get(j) - pricesTreated.get(i);
+                    if (currentDifference > maxDifference) {
+                        maxDifference = currentDifference;
+                        buyNumber = i;
+                        sellNumber = j;
+                    }
 
-            Map<Integer, Integer> sorted = prices.entrySet()
-                    .stream()
-                    .sorted(comparingByValue())
-                    .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
-                            LinkedHashMap::new));
-
-
-            int maxDifference = 0;
-            int currentDifference = 0;
-            pair = new Pair(0, 0);
-
-            Iterator it = sorted.entrySet().iterator();
-
-            Map.Entry next = null;
-
-            while (it.hasNext()) {
-                Map.Entry current = (Map.Entry) it.next();
-
-                if (it.hasNext()) {
-                    next = (Map.Entry) it.next();
                 }
-
-                currentDifference = (Integer) next.getValue() - (Integer) current.getValue();
-                if (currentDifference > maxDifference) {
-                    maxDifference = currentDifference;
-                    pair = new Pair(current.getKey(), next.getKey());
-                }
-
-                it.remove();
-
             }
 
         } catch (IOException | NumberFormatException e) {
             throw new IllegalArgumentException();
         }
-        return pair;
+
+        return new Pair(buyNumber + 1, sellNumber + 1);
     }
 
     /**
