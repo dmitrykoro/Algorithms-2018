@@ -2,11 +2,22 @@ package lesson2;
 
 import kotlin.NotImplementedError;
 import kotlin.Pair;
+import lesson1.Sorts;
 
-import java.util.Set;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.*;
+
+import static java.util.stream.Collectors.*;
+import static java.util.Map.Entry.*;
+
 
 @SuppressWarnings("unused")
 public class JavaAlgorithms {
+
+    Sorts sorts = new Sorts();
+
     /**
      * Получение наибольшей прибыли (она же -- поиск максимального подмассива)
      * Простая
@@ -32,7 +43,58 @@ public class JavaAlgorithms {
      * В случае обнаружения неверного формата файла бросить любое исключение.
      */
     static public Pair<Integer, Integer> optimizeBuyAndSell(String inputName) {
-        throw new NotImplementedError();
+        Pair pair;
+        try {
+            File input = new File(inputName);
+            List<String> pricesRaw = Files.readAllLines(input.toPath());
+
+            ArrayList<Integer> pricesTreated = new ArrayList<>();
+
+            for (String currentLine : pricesRaw) {
+                pricesTreated.add(Integer.parseInt(currentLine));
+            }
+
+            Map<Integer, Integer> prices = new HashMap<Integer, Integer>();
+            for (int i = 0; i < pricesTreated.size(); i++) {
+                prices.put(i + 1, pricesTreated.get(i));
+            }
+
+            Map<Integer, Integer> sorted = prices.entrySet()
+                    .stream()
+                    .sorted(comparingByValue())
+                    .collect(toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
+                            LinkedHashMap::new));
+
+
+            int maxDifference = 0;
+            int currentDifference = 0;
+            pair = new Pair(0, 0);
+
+            Iterator it = sorted.entrySet().iterator();
+
+            Map.Entry next = null;
+
+            while (it.hasNext()) {
+                Map.Entry current = (Map.Entry) it.next();
+
+                if (it.hasNext()) {
+                    next = (Map.Entry) it.next();
+                }
+
+                currentDifference = (Integer) next.getValue() - (Integer) current.getValue();
+                if (currentDifference > maxDifference) {
+                    maxDifference = currentDifference;
+                    pair = new Pair(current.getKey(), next.getKey());
+                }
+
+                it.remove();
+
+            }
+
+        } catch (IOException | NumberFormatException e) {
+            throw new IllegalArgumentException();
+        }
+        return pair;
     }
 
     /**
