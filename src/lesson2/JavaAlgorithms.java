@@ -154,7 +154,35 @@ public class JavaAlgorithms {
      * Единица простым числом не считается.
      */
     static public int calcPrimesNumber(int limit) {
-        throw new NotImplementedError();
+
+        if (limit <= 1)
+            return 0;
+        if (limit == 2) {
+            return 1;
+        }
+
+        boolean[] isPrime = new boolean[limit];
+
+        int numberOfPrime = 0;
+
+        Arrays.fill(isPrime,true);
+        isPrime[1] = false;
+
+        for (int i = 2; i * i < limit; i++) {
+            if (isPrime[i]) {
+                for (int j = i * i; j < limit; j += i) {
+                    isPrime[j] = false;
+                }
+            }
+        }
+
+        for (int i = 1; i < limit; i++) {
+            if (isPrime[i]) {
+                numberOfPrime++;
+            }
+        }
+
+        return numberOfPrime;
     }
 
     /**
