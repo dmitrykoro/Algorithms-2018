@@ -4,8 +4,10 @@ import kotlin.NotImplementedError;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SimpleTimeZone;
 
 @SuppressWarnings("unused")
 public class JavaTasks {
@@ -39,6 +41,9 @@ public class JavaTasks {
      */
     static public void sortTimes(String inputName, String outputName) {
 
+        // O(N^2) or O(N) if without exchanges (best case)
+        // O(N)
+
         try {
             File input = new File(inputName);
             List<String> timesRaw = Files.readAllLines(input.toPath());
@@ -55,36 +60,17 @@ public class JavaTasks {
             BufferedWriter wr = new BufferedWriter(new FileWriter(outputName));
 
             for (int i = 0; i < arrayTimes.length; i++) {
-                if (String.valueOf(arrayTimes[i]).length() == 1) {
-                    wr.write("00:00:0" + arrayTimes[i]);
-                    wr.newLine();
-                } else if (String.valueOf(arrayTimes[i]).length() == 2) {
-                    wr.write("00:00:" + arrayTimes[i]);
-                    wr.newLine();
-                } else if (String.valueOf(arrayTimes[i]).length() == 3) {
-                    wr.write("00:0" + String.valueOf(arrayTimes[i]).charAt(0) + ":" + String.valueOf(arrayTimes[i]).charAt(1)
-                            + String.valueOf(arrayTimes[i]).charAt(2));
-                    wr.newLine();
-                } else if (String.valueOf(arrayTimes[i]).length() == 4) {
-                    wr.write("00:" + String.valueOf(arrayTimes[i]).charAt(0) + String.valueOf(arrayTimes[i]).charAt(1) + ":"
-                            + String.valueOf(arrayTimes[i]).charAt(2) + String.valueOf(arrayTimes[i]).charAt(3));
-                    wr.newLine();
-                } else if (String.valueOf(arrayTimes[i]).length() == 5) {
-                    wr.write("0" + String.valueOf(arrayTimes[i]).charAt(0) + ":" + String.valueOf(arrayTimes[i]).charAt(1)
-                            + String.valueOf(arrayTimes[i]).charAt(2) + ":" + String.valueOf(arrayTimes[i]).charAt(3)
-                            + String.valueOf(arrayTimes[i]).charAt(4));
-                    wr.newLine();
-                } else if (String.valueOf(arrayTimes[i]).length() == 6) {
-                    wr.write(String.valueOf(arrayTimes[i]).substring(0, 2) + ":"
-                            + String.valueOf(arrayTimes[i]).substring(2, 4) + ":"
-                            + String.valueOf(arrayTimes[i]).substring(4));
-                    wr.newLine();
-                }
+                String out = String.format("%02d:%02d:%02d",
+                        arrayTimes[i] / 10000,
+                        arrayTimes[i] / 100 % 100,
+                        arrayTimes[i] % 100);
+                wr.write(out);
+                wr.newLine();
             }
             wr.close();
 
         } catch (IOException | NumberFormatException e) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Wrong file format");
         }
     }
 
@@ -147,6 +133,10 @@ public class JavaTasks {
      * 121.3
      */
     static public void sortTemperatures(String inputName, String outputName) {
+
+        // O(N * log(N))
+        // O(N)
+
         try {
             File input = new File(inputName);
             List<String> tempsRaw = Files.readAllLines(input.toPath());
@@ -157,18 +147,18 @@ public class JavaTasks {
             }
 
             int[] arrayTemps = tempsTreated.stream().mapToInt(i -> i).toArray();
-            Sorts.quickSort(arrayTemps);
+            Sorts.mergeSort(arrayTemps);
 
             BufferedWriter wr = new BufferedWriter(new FileWriter(outputName));
 
-            for (int i = 0; i < arrayTemps.length; i++) {
-                wr.write(String.valueOf((double) arrayTemps[i] / 10));
+            for (int arrayTemp : arrayTemps) {
+                wr.write(String.valueOf((double) arrayTemp / 10));
                 wr.newLine();
             }
             wr.close();
 
-        } catch (Throwable e) {
-            throw new IllegalArgumentException();
+        } catch (NumberFormatException | IOException e) {
+            throw new IllegalArgumentException("Wrong data format or file doesn't exist");
         }
     }
 

@@ -1,9 +1,11 @@
 package lesson1
 
+import org.junit.jupiter.api.assertThrows
 import java.io.BufferedWriter
 import java.io.File
 import java.util.*
 import kotlin.math.abs
+import kotlin.test.assertEquals
 
 abstract class AbstractTaskTests : AbstractFileTests() {
 
@@ -38,6 +40,13 @@ abstract class AbstractTaskTests : AbstractFileTests() {
             assertFileContent("temp.txt", File("input/time_out3.txt").readLines().joinToString(separator = "\n"))
         } finally {
             File("temp.txt").delete()
+        }
+        try {
+            val exception: Exception = assertThrows { IllegalArgumentException::class.java;
+                sortTimes("input/time_in4.txt", "temp.txt") }
+            assertEquals("Wrong file format", exception.message)
+        } finally {
+            File("temp.txt").delete();
         }
     }
 
@@ -99,6 +108,23 @@ abstract class AbstractTaskTests : AbstractFileTests() {
             File("temp.txt").delete()
         }
 
+        try {
+            sortTemperatures("input/temp_in2.txt", "temp.txt")
+            assertFileContent("temp.txt",
+                    """""".trimIndent()
+            )
+        } finally {
+            File("temp.txt").delete()
+        }
+
+        try {
+            val exception: Exception = assertThrows { IllegalArgumentException::class.java;
+                sortTemperatures("input/temp_in3.txt", "temp.txt") }
+            assertEquals("Wrong data format or file doesn't exist", exception.message)
+        } finally {
+            File("temp.txt").delete();
+        }
+
         fun testGeneratedTemperatures(size: Int) {
             try {
                 generateTemperatures(size)
@@ -113,7 +139,7 @@ abstract class AbstractTaskTests : AbstractFileTests() {
             }
         }
         testGeneratedTemperatures(10)
-        testGeneratedTemperatures(5000)
+        testGeneratedTemperatures(250)
     }
 
     protected fun sortSequence(sortSequence: (String, String) -> Unit) {

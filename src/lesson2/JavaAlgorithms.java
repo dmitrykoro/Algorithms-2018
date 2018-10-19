@@ -44,6 +44,9 @@ public class JavaAlgorithms {
      */
     static public Pair<Integer, Integer> optimizeBuyAndSell(String inputName) {
 
+        // O(N^2)
+        // don't know yet (TODO)
+
         int currentDifference = 0;
         int maxDifference = 0;
         int buyNumber = -1;
@@ -72,7 +75,7 @@ public class JavaAlgorithms {
             }
 
         } catch (IOException | NumberFormatException e) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Wrong data format or file doesn't exist");
         }
 
         return new Pair(buyNumber + 1, sellNumber + 1);
@@ -154,6 +157,9 @@ public class JavaAlgorithms {
      * Единица простым числом не считается.
      */
     static public int calcPrimesNumber(int limit) {
+
+        // O(N*log(log(N)))
+        // O(N)
 
         if (limit <= 1)
             return 0;

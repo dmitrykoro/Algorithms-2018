@@ -1,5 +1,6 @@
 package lesson2
 
+import org.junit.jupiter.api.assertThrows
 import java.io.BufferedWriter
 import java.io.File
 import java.util.*
@@ -46,6 +47,7 @@ abstract class AbstractAlgorithmsTests {
         assertEquals(3 to 4, optimizeBuyAndSell("input/buysell_in1.txt"))
         assertEquals(8 to 12, optimizeBuyAndSell("input/buysell_in2.txt"))
         assertEquals(3 to 4, optimizeBuyAndSell("input/buysell_in3.txt"))
+        assertEquals(0 to 0, optimizeBuyAndSell("input/buysell_in5.txt"))
         try {
             val expectedAnswer = generatePrices(1000)
             assertEquals(expectedAnswer, optimizeBuyAndSell("temp_prices.txt"))
@@ -58,6 +60,14 @@ abstract class AbstractAlgorithmsTests {
         } finally {
             File("temp_prices.txt").delete()
         }
+        try {
+            val exception: Exception = assertThrows { IllegalArgumentException::class.java;
+                optimizeBuyAndSell("input/buysell_in4.txt") }
+            assertEquals("Wrong data format or file doesn't exist", exception.message)
+        } finally {
+            File("temp_prices.txt").delete()
+        }
+
     }
 
     fun josephTask(josephTask: (Int, Int) -> Int) {
@@ -650,7 +660,9 @@ abstract class AbstractAlgorithmsTests {
 
     fun calcPrimesNumber(calcPrimesNumber: (Int) -> Int) {
         assertEquals(0, calcPrimesNumber(-1))
+        assertEquals(0, calcPrimesNumber(0))
         assertEquals(0, calcPrimesNumber(1))
+        assertEquals(1, calcPrimesNumber(3))
         assertEquals(1, calcPrimesNumber(2))
         assertEquals(2, calcPrimesNumber(4))
         assertEquals(4, calcPrimesNumber(10))
@@ -670,6 +682,7 @@ abstract class AbstractAlgorithmsTests {
         assertEquals(148933, calcPrimesNumber(2000000))
         assertEquals(348513, calcPrimesNumber(5000000))
         assertEquals(664579, calcPrimesNumber(10000000))
+        assertEquals(5761455, calcPrimesNumber(100000000))
     }
 
     fun baldaSearcher(baldaSearcher: (String, Set<String>) -> Set<String>) {
