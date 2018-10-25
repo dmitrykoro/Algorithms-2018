@@ -158,7 +158,7 @@ public class JavaTasks {
             wr.close();
 
         } catch (NumberFormatException | IOException e) {
-            throw new IllegalArgumentException("Wrong data format or file doesn't exist");
+            throw new IllegalArgumentException();
         }
     }
 

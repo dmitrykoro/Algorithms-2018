@@ -41,13 +41,6 @@ abstract class AbstractTaskTests : AbstractFileTests() {
         } finally {
             File("temp.txt").delete()
         }
-        try {
-            val exception: Exception = assertThrows { IllegalArgumentException::class.java;
-                sortTimes("input/time_in4.txt", "temp.txt") }
-            assertEquals("Wrong file format", exception.message)
-        } finally {
-            File("temp.txt").delete();
-        }
     }
 
     protected fun sortAddresses(sortAddresses: (String, String) -> Unit) {
@@ -115,14 +108,6 @@ abstract class AbstractTaskTests : AbstractFileTests() {
             )
         } finally {
             File("temp.txt").delete()
-        }
-
-        try {
-            val exception: Exception = assertThrows { IllegalArgumentException::class.java;
-                sortTemperatures("input/temp_in3.txt", "temp.txt") }
-            assertEquals("Wrong data format or file doesn't exist", exception.message)
-        } finally {
-            File("temp.txt").delete();
         }
 
         fun testGeneratedTemperatures(size: Int) {
