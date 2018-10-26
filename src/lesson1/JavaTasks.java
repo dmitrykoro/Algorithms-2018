@@ -56,7 +56,7 @@ public class JavaTasks {
 
             int[] arrayTimes = timesTreated.stream().mapToInt(i -> i).toArray();
 
-            Sorts.insertionSort(arrayTimes);
+            Sorts.quickSort(arrayTimes);
             BufferedWriter wr = new BufferedWriter(new FileWriter(outputName));
 
             for (int i = 0; i < arrayTimes.length; i++) {

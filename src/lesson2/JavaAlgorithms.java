@@ -142,8 +142,44 @@ public class JavaAlgorithms {
      * Если имеется несколько самых длинных общих подстрок одной длины,
      * вернуть ту из них, которая встречается раньше в строке first.
      */
-    static public String longestCommonSubstring(String firs, String second) {
-        throw new NotImplementedError();
+    static public String longestCommonSubstring(String first, String second) {
+
+        // O(first.length * second.length)
+        // O(first.length * second.length)
+
+        int[][] arr = new int[first.length()][second.length()];
+        int longestCommonLength = 0;
+        int lastMaxIndex = 0;
+
+        if (first.equals(second)) {
+            return second;
+        }
+
+        if (first.length() == 0 | second.length() == 0) {
+            return "";
+        }
+
+        for (int i = 0; i < first.length(); i++) {
+            for (int j = 0; j < second.length(); j++) {
+
+                if (first.charAt(i) == second.charAt(j)) {
+                    if (i != 0 && j != 0) {
+                        arr[i][j] = arr[i - 1][j - 1] + 1;
+                    } else {
+                        arr[i][j] = 1;
+                    }
+                    if (arr[i][j] > longestCommonLength) {
+                        longestCommonLength = arr[i][j];
+                        lastMaxIndex = i;
+                    }
+                }
+                else {
+                    arr[i][j] = 0;
+                }
+
+            }
+        }
+        return first.substring(lastMaxIndex - longestCommonLength + 1, lastMaxIndex + 1);
     }
 
     /**
