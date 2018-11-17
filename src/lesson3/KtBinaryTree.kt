@@ -11,7 +11,7 @@ class KtBinaryTree<T : Comparable<T>> : AbstractMutableSet<T>(), CheckableSorted
     override var size = 0
         private set
 
-    private class Node<T>(val value: T) {
+    class Node<T>(val value: T) {
 
         var left: Node<T>? = null
 
@@ -55,7 +55,72 @@ class KtBinaryTree<T : Comparable<T>> : AbstractMutableSet<T>(), CheckableSorted
      * Средняя
      */
     override fun remove(element: T): Boolean {
-        TODO()
+        if (find(element) == null)
+            return false
+        var current = root
+        var parent = root
+        var isLeft = true
+        while (current!!.value != element) {
+            parent = current
+            if (element < current.value) { //go left?
+                isLeft = true
+                current = current.left
+            } else {                        //go right?
+                isLeft = false
+                current = current.right
+            }
+            if (current == null)
+                return false
+        }
+
+        if (current.left == null && current.right == null) {
+            if (current == root)
+                root = null
+            else if (isLeft)
+                parent?.left = null
+            else
+                parent?.right = null
+        }
+        else if (current.right == null) {
+            if (current == root)
+                root = current.left
+            else if (isLeft)
+                parent?.left = current.left
+        }
+        else if (current.left == null) {
+            if (current == root)
+                root = current.right
+            else if (isLeft)
+                parent?.left = current.left
+            else
+                parent?.right = current.right
+        }
+        else {
+            var successor = getSuccessor(current)
+            if (current == root)
+                root = successor
+            else if (isLeft)
+                parent?.left
+            else
+                parent?.right = successor
+        }
+        return true
+    }
+
+    fun getSuccessor(deletedNode: Node<T>): Node<T> {
+        var succParent = deletedNode
+        var succ = deletedNode
+        var current = deletedNode.right
+        while (current != null) {
+            succParent = succ
+            succ = current
+            current = current.left
+        }
+        if (succ != deletedNode.right) {
+            succParent.left = succ.right
+            succ.right = deletedNode.right
+        }
+        return succ
     }
 
     override operator fun contains(element: T): Boolean {
@@ -99,7 +164,9 @@ class KtBinaryTree<T : Comparable<T>> : AbstractMutableSet<T>(), CheckableSorted
          * Сложная
          */
         override fun remove() {
-            TODO()
+            val curr = current
+            current = findNext()
+            remove(curr?.value)
         }
     }
 

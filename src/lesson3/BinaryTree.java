@@ -66,7 +66,6 @@ public class BinaryTree<T extends Comparable<T>> extends AbstractSet<T> implemen
      */
     @Override
     public boolean remove(Object o) {
-        // TODO
         throw new NotImplementedError();
     }
 
