@@ -90,7 +90,7 @@ class KtBinaryTree<T : Comparable<T>> : AbstractMutableSet<T>(), CheckableSorted
         } else if (current.left == null) {
             when {
                 current == root -> root = current.right ?: return false
-                isLeft -> parent.left = current.left ?: return false
+                isLeft -> parent.left = current.right ?: return false
                 else -> parent.right = current.right ?: return false
             }
         } else {
@@ -106,19 +106,19 @@ class KtBinaryTree<T : Comparable<T>> : AbstractMutableSet<T>(), CheckableSorted
     }
 
     private fun getSuccessor(deletedNode: Node<T>): Node<T> {
-        var succParent = deletedNode
-        var succ = deletedNode
+        var successorParent = deletedNode
+        var successor = deletedNode
         var current = deletedNode.right
         while (current != null) {
-            succParent = succ
-            succ = current
+            successorParent = successor
+            successor = current
             current = current.left
         }
-        if (succ != deletedNode.right) {
-            succParent.left = succ.right
-            succ.right = deletedNode.right
+        if (successor != deletedNode.right) {
+            successorParent.left = successor.right
+            successor.right = deletedNode.right
         }
-        return succ
+        return successor
     }
 
     override operator fun contains(element: T): Boolean {
