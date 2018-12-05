@@ -20,7 +20,7 @@ public class JavaDynamicTasks {
     public static String longestCommonSubSequence(String first, String second) {
 
         // O(N * M), N - length of first, M - length of second
-        // TODO
+        // O(N * M), N - length of first, M - length of second
 
         int[][] sizes = new int[first.length() + 1][second.length() + 1];
 

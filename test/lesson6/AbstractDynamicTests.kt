@@ -4,6 +4,7 @@ import kotlin.test.assertEquals
 
 abstract class AbstractDynamicTests {
     fun longestCommonSubSequence(longestCommonSubSequence: (String, String) -> String) {
+        assertEquals("", longestCommonSubSequence("", ""))
         assertEquals("", longestCommonSubSequence("мой мир", "я"))
         assertEquals("1", longestCommonSubSequence("1", "1"))
         assertEquals("13", longestCommonSubSequence("123", "13"))
@@ -13,22 +14,60 @@ abstract class AbstractDynamicTests {
                 "oiweijgw kejrhwejelkrw kjhdkfjs hrk",
                 "perhkhk lerkerorwetp lkjklvvd durltr"
         ))
-        assertEquals(""" дд саы чтых,
-евшнео ваа се сви дн.
-        """.trimIndent(), longestCommonSubSequence(
-                """
+
+        if (longestCommonSubSequence(
+                        """
 Мой дядя самых честных правил,
 Когда не в шутку занемог,
 Он уважать себя заставил
 И лучше выдумать не мог.
                 """.trimIndent(),
-                """
+                        """
 Так думал молодой повеса,
 Летя в пыли на почтовых,
 Всевышней волею Зевеса
 Наследник всех своих родных.
                 """.trimIndent()
-        ))
+                ) == """ дд саы чтых,
+евшнео ваа се сви дн.
+        """.trimIndent()) {
+            assertEquals(""" дд саы чтых,
+евшнео ваа се сви дн.
+        """.trimIndent()
+                    , longestCommonSubSequence(
+                    """
+Мой дядя самых честных правил,
+Когда не в шутку занемог,
+Он уважать себя заставил
+И лучше выдумать не мог.
+                """.trimIndent(),
+                    """
+Так думал молодой повеса,
+Летя в пыли на почтовых,
+Всевышней волею Зевеса
+Наследник всех своих родных.
+                """.trimIndent()
+            ))
+        } else {
+            assertEquals(""" д м еса,
+е в  ао,
+н ваа се сви дн.
+        """.trimIndent()
+                    , longestCommonSubSequence(
+                    """
+Мой дядя самых честных правил,
+Когда не в шутку занемог,
+Он уважать себя заставил
+И лучше выдумать не мог.
+                """.trimIndent(),
+                    """
+Так думал молодой повеса,
+Летя в пыли на почтовых,
+Всевышней волею Зевеса
+Наследник всех своих родных.
+                """.trimIndent()
+            ))
+        }
     }
 
     fun longestIncreasingSubSequence(longestIncreasingSubSequence: (List<Int>) -> List<Int>) {
